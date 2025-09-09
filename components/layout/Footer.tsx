@@ -3,6 +3,7 @@ import {
   PhoneIcon,
   MapPinIcon,
 } from "@heroicons/react/24/outline";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -10,13 +11,22 @@ export default function Footer() {
       <div className="container-max section-padding py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h3 className="text-2xl font-bold text-drone-blue mb-4">
-              Global Drone
-            </h3>
+            <div className="flex items-center mb-4">
+              <Image
+                src="/logo.png"
+                alt="Global Drone"
+                width={40}
+                height={40}
+                className="mr-3"
+              />
+              <h3 className="text-2xl font-bold text-drone-blue">
+                Global Drone SPA
+              </h3>
+            </div>
             <p className="text-gray-300 mb-4">
-              Servicios profesionales con drones para minería, agricultura,
-              construcción y más. Tecnología de vanguardia al servicio de tu
-              proyecto.
+              Empresa certificada por la DGAC bajo AOC 1819. Servicios
+              profesionales con drones para minería, agricultura, construcción y
+              más. Tecnología de vanguardia al servicio de tu proyecto.
             </p>
           </div>
 
@@ -51,7 +61,8 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-          <p>&copy; 2024 Global Drone. Todos los derechos reservados.</p>
+          <p>&copy; 2024 Global Drone SPA. Todos los derechos reservados.</p>
+          <p className="text-sm mt-2">Certificación DGAC AOC 1819 | Chile</p>
         </div>
       </div>
     </footer>

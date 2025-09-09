@@ -4,11 +4,13 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import Image from "next/image";
 
 const navigation = [
   { name: "Inicio", href: "#inicio" },
   { name: "Servicios", href: "#servicios" },
   { name: "Nosotros", href: "#nosotros" },
+  { name: "Certificaciones", href: "#certificaciones" },
   { name: "Portafolio", href: "#portafolio" },
   { name: "Contacto", href: "#contacto" },
 ];
@@ -20,7 +22,14 @@ export default function Navbar() {
     <header className="fixed w-full bg-white/95 backdrop-blur-sm z-50 shadow-sm">
       <nav className="container-max section-padding flex items-center justify-between py-4">
         <div className="flex lg:flex-1">
-          <Link href="/" className="-m-1.5 p-1.5">
+          <Link href="/" className="-m-1.5 p-1.5 flex items-center">
+            <Image
+              src="/logo.png"
+              alt="Global Drone"
+              width={40}
+              height={40}
+              className="mr-3"
+            />
             <span className="text-2xl font-bold text-drone-blue">
               Global Drone
             </span>
@@ -66,7 +75,14 @@ export default function Navbar() {
         >
           <div className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
             <div className="flex items-center justify-between">
-              <Link href="/" className="-m-1.5 p-1.5">
+              <Link href="/" className="-m-1.5 p-1.5 flex items-center">
+                <Image
+                  src="/logo.png"
+                  alt="Global Drone"
+                  width={32}
+                  height={32}
+                  className="mr-2"
+                />
                 <span className="text-xl font-bold text-drone-blue">
                   Global Drone
                 </span>

@@ -11,12 +11,13 @@ const stats = [
 ];
 
 const features = [
+  "Certificación DGAC AOC 1819",
   "Pilotos certificados y experimentados",
   "Equipos de última generación",
-  "Cobertura nacional",
+  "Cobertura nacional Chile",
   "Seguros de responsabilidad civil",
   "Reportes detallados y profesionales",
-  "Cumplimiento de normativas aéreas",
+  "Cumplimiento normativas aeronáuticas",
 ];
 
 export default function About() {
@@ -31,20 +32,28 @@ export default function About() {
             viewport={{ once: true }}
           >
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-              Sobre Global Drone
+              Sobre Global Drone SPA
             </h2>
 
             <p className="text-lg text-gray-600 mb-6">
-              Somos una empresa especializada en servicios profesionales con
-              drones, comprometida con la excelencia y la innovación
-              tecnológica. Nuestro equipo de pilotos certificados y técnicos
-              especializados trabaja con los equipos más avanzados del mercado.
+              Somos una empresa chilena especializada en servicios profesionales
+              con drones,
+              <strong className="text-drone-blue">
+                {" "}
+                certificada por la DGAC bajo AOC 1819
+              </strong>
+              . Nuestro compromiso con la excelencia y la innovación tecnológica
+              nos posiciona como líderes en el sector de servicios aéreos no
+              tripulados.
             </p>
 
             <p className="text-lg text-gray-600 mb-8">
-              Desde el monitoreo de obras mineras hasta la fumigación de
-              precisión en agricultura, ofrecemos soluciones integrales que
-              optimizan procesos y reducen costos operativos.
+              Nuestro equipo de pilotos certificados y técnicos especializados
+              trabaja con los equipos más avanzados del mercado, cumpliendo con
+              todas las normativas aeronáuticas vigentes. Desde el monitoreo de
+              obras mineras hasta la fumigación de precisión en agricultura,
+              ofrecemos soluciones integrales que optimizan procesos y reducen
+              costos operativos.
             </p>
 
             <div className="grid grid-cols-2 gap-4 mb-8">
