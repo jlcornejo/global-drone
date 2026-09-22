@@ -8,6 +8,8 @@ import {
   VideoCameraIcon,
   CubeTransparentIcon,
 } from "@heroicons/react/24/outline";
+import Reveal from "@/components/ui/Reveal";
+import TiltCard from "@/components/ui/TiltCard";
 
 const services = [
   {
@@ -57,13 +59,7 @@ export default function Services() {
       <div className="pointer-events-none absolute inset-0 tech-grid opacity-[0.15]" />
 
       <div className="container-max section-padding relative">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="mx-auto max-w-2xl text-center"
-        >
+        <Reveal className="mx-auto max-w-2xl text-center">
           <span className="eyebrow mb-5">Nuestros Servicios</span>
           <h2 className="font-display text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
             Soluciones integrales para la{" "}
@@ -73,77 +69,71 @@ export default function Services() {
             Adaptadas a las necesidades de cada sector, con la precisión y
             seguridad que exige cada operación.
           </p>
-        </motion.div>
+        </Reveal>
 
         <div className="mt-16 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {services.map((service, index) => (
-            <motion.article
-              key={service.title}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.08 }}
-              viewport={{ once: true }}
-              whileHover={{ y: -8 }}
-              className="group glass-card relative overflow-hidden"
-            >
-              {/* Image */}
-              <div className="relative h-48 overflow-hidden">
-                <div
-                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                  style={{ backgroundImage: `url(${service.image})` }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-night-900 via-night-900/50 to-transparent" />
-                <div className="absolute left-4 top-4 rounded-xl border border-white/10 bg-night-950/60 p-3 backdrop-blur-md transition-colors group-hover:border-cyan-400/50">
-                  <service.icon className="h-6 w-6 text-cyan-400" />
-                </div>
-              </div>
+            <Reveal key={service.title} delay={index * 0.08}>
+              <TiltCard className="h-full">
+                <article className="glass-card relative h-full overflow-hidden [transform:translateZ(0)]">
+                  {/* Image */}
+                  <div className="relative h-48 overflow-hidden">
+                    <div
+                      className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+                      style={{ backgroundImage: `url(${service.image})` }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-night-900 via-night-900/50 to-transparent" />
+                    <div
+                      className="absolute left-4 top-4 rounded-xl border border-white/10 bg-night-950/60 p-3 backdrop-blur-md transition-colors group-hover:border-cyan-400/50"
+                      style={{ transform: "translateZ(40px)" }}
+                    >
+                      <service.icon className="h-6 w-6 text-cyan-400" />
+                    </div>
+                  </div>
 
-              {/* Body */}
-              <div className="p-6">
-                <h3 className="font-display text-xl font-semibold text-white">
-                  {service.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-400">
-                  {service.description}
-                </p>
-                <a
-                  href="#contacto"
-                  className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-cyan-400 transition-colors hover:text-cyan-300"
-                >
-                  Solicitar información
-                  <span className="transition-transform group-hover:translate-x-1">
-                    →
-                  </span>
-                </a>
-              </div>
+                  {/* Body */}
+                  <div className="p-6" style={{ transform: "translateZ(30px)" }}>
+                    <h3 className="font-display text-xl font-semibold text-white">
+                      {service.title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-relaxed text-slate-400">
+                      {service.description}
+                    </p>
+                    <a
+                      href="#contacto"
+                      className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-cyan-400 transition-colors hover:text-cyan-300"
+                    >
+                      Solicitar información
+                      <span className="transition-transform group-hover:translate-x-1">
+                        →
+                      </span>
+                    </a>
+                  </div>
 
-              {/* glow border on hover */}
-              <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-transparent transition-all duration-300 group-hover:ring-cyan-400/30" />
-            </motion.article>
+                  <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-transparent transition-all duration-300 group-hover:ring-cyan-400/30" />
+                </article>
+              </TiltCard>
+            </Reveal>
           ))}
 
           {/* CTA card */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            viewport={{ once: true }}
-            className="relative flex flex-col justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-cyan-500 to-cyan-600 p-8 text-night-950"
-          >
-            <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/20 blur-2xl" />
-            <h3 className="font-display text-2xl font-bold">
-              ¿Necesitas un presupuesto personalizado?
-            </h3>
-            <p className="mt-2 text-night-950/80">
-              Respondemos en menos de 24 horas hábiles.
-            </p>
-            <a
-              href="#contacto"
-              className="mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-night-950 px-6 py-3 font-semibold text-white transition-transform hover:-translate-y-0.5"
-            >
-              Solicitar Cotización →
-            </a>
-          </motion.div>
+          <Reveal delay={0.4}>
+            <div className="relative flex h-full flex-col justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-cyan-500 to-cyan-600 p-8 text-night-950">
+              <div className="absolute -right-8 -top-8 h-32 w-32 animate-pulse-glow rounded-full bg-white/20 blur-2xl" />
+              <h3 className="font-display text-2xl font-bold">
+                ¿Necesitas un presupuesto personalizado?
+              </h3>
+              <p className="mt-2 text-night-950/80">
+                Respondemos en menos de 24 horas hábiles.
+              </p>
+              <a
+                href="#contacto"
+                className="mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-night-950 px-6 py-3 font-semibold text-white transition-transform hover:-translate-y-0.5"
+              >
+                Solicitar Cotización →
+              </a>
+            </div>
+          </Reveal>
         </div>
       </div>
     </section>
