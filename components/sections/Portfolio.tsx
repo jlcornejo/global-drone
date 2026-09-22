@@ -1,36 +1,77 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
-import { XMarkIcon, PhotoIcon, ArrowUpRightIcon } from "@heroicons/react/24/outline";
+import {
+  XMarkIcon,
+  PhotoIcon,
+  ArrowUpRightIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from "@heroicons/react/24/outline";
 import Reveal from "@/components/ui/Reveal";
 
-const albums = [
+const BASE = "https://globaldrone.cl/Fotos";
+
+type Album = {
+  id: string;
+  title: string;
+  photos: string[];
+};
+
+const albums: Album[] = [
   {
     id: "preparacion",
     title: "Preparación de Vuelos",
-    count: "14 Fotografías",
-    cover: "https://globaldrone.cl/Fotos/7.jpg",
+    // 1.jpg ... 14.jpg
+    photos: Array.from({ length: 14 }, (_, i) => `${BASE}/${i + 1}.jpg`),
   },
   {
     id: "tomas",
     title: "Tomas Aéreas",
-    count: "14 Fotografías",
-    cover: "https://globaldrone.cl/Fotos/D7.JPG",
+    // D1.JPG ... D14.JPG
+    photos: Array.from({ length: 14 }, (_, i) => `${BASE}/D${i + 1}.JPG`),
   },
 ];
 
 export default function Portfolio() {
-  const [active, setActive] = useState<null | (typeof albums)[number]>(null);
+  const [openAlbum, setOpenAlbum] = useState<Album | null>(null);
+  const [index, setIndex] = useState(0);
 
-  // Lock scroll when lightbox open
+  const close = useCallback(() => setOpenAlbum(null), []);
+  const next = useCallback(() => {
+    if (!openAlbum) return;
+    setIndex((i) => (i + 1) % openAlbum.photos.length);
+  }, [openAlbum]);
+  const prev = useCallback(() => {
+    if (!openAlbum) return;
+    setIndex((i) => (i - 1 + openAlbum.photos.length) % openAlbum.photos.length);
+  }, [openAlbum]);
+
+  const open = (album: Album) => {
+    setIndex(0);
+    setOpenAlbum(album);
+  };
+
+  // Keyboard navigation + scroll lock
   useEffect(() => {
-    document.body.style.overflow = active ? "hidden" : "";
+    if (!openAlbum) {
+      document.body.style.overflow = "";
+      return;
+    }
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close();
+      if (e.key === "ArrowRight") next();
+      if (e.key === "ArrowLeft") prev();
+    };
+    window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
     };
-  }, [active]);
+  }, [openAlbum, close, next, prev]);
 
   return (
     <section id="galeria" className="relative overflow-hidden py-24">
@@ -45,26 +86,21 @@ export default function Portfolio() {
         </Reveal>
 
         <div className="mt-14 grid grid-cols-1 gap-8 md:grid-cols-2">
-          {albums.map((album, index) => (
-            <Reveal key={album.id} delay={index * 0.12}>
+          {albums.map((album, i) => (
+            <Reveal key={album.id} delay={i * 0.12}>
               <motion.button
-                onClick={() => setActive(album)}
+                onClick={() => open(album)}
                 whileHover="hover"
                 className="group relative block aspect-[4/3] w-full overflow-hidden rounded-3xl border border-white/10 text-left"
               >
-                <motion.div
+                <motion.img
+                  src={album.photos[0]}
+                  alt={album.title}
+                  loading="lazy"
                   variants={{ hover: { scale: 1.08 } }}
                   transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                  className="absolute inset-0"
-                >
-                  <Image
-                    src={album.cover}
-                    alt={album.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-cover"
-                  />
-                </motion.div>
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-night-950 via-night-950/30 to-transparent" />
 
                 {/* Sheen sweep on hover */}
@@ -83,7 +119,7 @@ export default function Portfolio() {
                     </h3>
                     <p className="mt-1 flex items-center gap-2 text-sm text-cyan-300">
                       <PhotoIcon className="h-4 w-4" />
-                      {album.count} · Ver álbum
+                      {album.photos.length} Fotografías · Ver álbum
                     </p>
                   </div>
                   <motion.span
@@ -99,51 +135,103 @@ export default function Portfolio() {
         </div>
       </div>
 
-      {/* Lightbox */}
+      {/* Lightbox with full album navigation */}
       <AnimatePresence>
-        {active && (
+        {openAlbum && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[80] flex items-center justify-center p-4"
-            onClick={() => setActive(null)}
+            className="fixed inset-0 z-[80] flex flex-col p-4 sm:p-6"
+            onClick={close}
           >
-            <div className="absolute inset-0 bg-night-950/90 backdrop-blur-md" />
-            <motion.div
-              initial={{ scale: 0.85, opacity: 0, y: 30 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.85, opacity: 0, y: 30 }}
-              transition={{ type: "spring", damping: 26, stiffness: 260 }}
-              className="relative z-10 w-full max-w-3xl overflow-hidden rounded-2xl border border-white/10 shadow-card"
+            <div className="absolute inset-0 bg-night-950/95 backdrop-blur-md" />
+
+            {/* Header */}
+            <div
+              className="relative z-10 flex items-center justify-between"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="relative aspect-video">
-                <Image
-                  src={active.cover}
-                  alt={active.title}
-                  fill
-                  sizes="100vw"
-                  className="object-cover"
+              <div>
+                <h3 className="font-display text-lg font-bold text-white">
+                  {openAlbum.title}
+                </h3>
+                <p className="text-sm text-slate-400">
+                  {index + 1} / {openAlbum.photos.length}
+                </p>
+              </div>
+              <button
+                onClick={close}
+                className="rounded-full border border-white/15 bg-white/5 p-2 text-white transition-colors hover:bg-white/10"
+                aria-label="Cerrar"
+              >
+                <XMarkIcon className="h-6 w-6" />
+              </button>
+            </div>
+
+            {/* Main image */}
+            <div
+              className="relative z-10 flex flex-1 items-center justify-center py-4"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={prev}
+                aria-label="Anterior"
+                className="absolute left-0 z-20 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-night-900/70 text-white backdrop-blur-md transition-colors hover:bg-cyan-400 hover:text-night-950 sm:left-2"
+              >
+                <ChevronLeftIcon className="h-6 w-6" />
+              </button>
+
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={openAlbum.photos[index]}
+                  src={openAlbum.photos[index]}
+                  alt={`${openAlbum.title} ${index + 1}`}
+                  initial={{ opacity: 0, scale: 0.97 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.97 }}
+                  transition={{ duration: 0.25 }}
+                  className="max-h-[70vh] max-w-full rounded-xl object-contain shadow-card"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-night-950/60 to-transparent" />
+              </AnimatePresence>
+
+              <button
+                onClick={next}
+                aria-label="Siguiente"
+                className="absolute right-0 z-20 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-night-900/70 text-white backdrop-blur-md transition-colors hover:bg-cyan-400 hover:text-night-950 sm:right-2"
+              >
+                <ChevronRightIcon className="h-6 w-6" />
+              </button>
+            </div>
+
+            {/* Thumbnails */}
+            <div
+              className="relative z-10 flex justify-center"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex max-w-full gap-2 overflow-x-auto pb-2">
+                {openAlbum.photos.map((src, i) => (
+                  <button
+                    key={src}
+                    onClick={() => setIndex(i)}
+                    className={`relative h-14 w-20 flex-shrink-0 overflow-hidden rounded-lg border-2 transition-all ${
+                      i === index
+                        ? "border-cyan-400 opacity-100"
+                        : "border-transparent opacity-50 hover:opacity-100"
+                    }`}
+                    aria-label={`Foto ${i + 1}`}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={src}
+                      alt=""
+                      loading="lazy"
+                      className="h-full w-full object-cover"
+                    />
+                  </button>
+                ))}
               </div>
-              <div className="flex items-center justify-between bg-night-900 p-5">
-                <div>
-                  <h3 className="font-display text-lg font-bold text-white">
-                    {active.title}
-                  </h3>
-                  <p className="text-sm text-slate-400">{active.count}</p>
-                </div>
-                <button
-                  onClick={() => setActive(null)}
-                  className="rounded-full border border-white/15 bg-white/5 p-2 text-white transition-colors hover:bg-white/10"
-                  aria-label="Cerrar"
-                >
-                  <XMarkIcon className="h-5 w-5" />
-                </button>
-              </div>
-            </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
