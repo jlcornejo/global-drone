@@ -1,160 +1,132 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { PlayIcon } from "@heroicons/react/24/solid";
+import Image from "next/image";
+import { XMarkIcon, PhotoIcon } from "@heroicons/react/24/outline";
 
-// Placeholder data - será reemplazado por datos del admin
-const portfolioItems = [
+const albums = [
   {
-    id: 1,
-    title: "Monitoreo Mina El Dorado",
-    category: "Minería",
-    type: "video",
-    thumbnail: "/api/placeholder/600/400",
-    description:
-      "Seguimiento mensual del avance de extracción en mina a cielo abierto",
+    id: "preparacion",
+    title: "Preparación de Vuelos",
+    count: "14 Fotografías",
+    cover: "https://globaldrone.cl/Fotos/7.jpg",
   },
   {
-    id: 2,
-    title: "Fumigación Cultivo de Maíz",
-    category: "Agricultura",
-    type: "video",
-    thumbnail: "/api/placeholder/600/400",
-    description: "Aplicación de pesticidas en 200 hectáreas de cultivo",
+    id: "tomas",
+    title: "Tomas Aéreas",
+    count: "14 Fotografías",
+    cover: "https://globaldrone.cl/Fotos/D7.JPG",
   },
-  {
-    id: 3,
-    title: "Inspección Torre de Comunicaciones",
-    category: "Infraestructura",
-    type: "image",
-    thumbnail: "/api/placeholder/600/400",
-    description: "Inspección detallada de estructura de 80 metros de altura",
-  },
-  {
-    id: 4,
-    title: "Video Promocional Resort",
-    category: "Comercial",
-    type: "video",
-    thumbnail: "/api/placeholder/600/400",
-    description: "Producción audiovisual para campaña publicitaria",
-  },
-  {
-    id: 5,
-    title: "Mapeo Topográfico",
-    category: "Topografía",
-    type: "image",
-    thumbnail: "/api/placeholder/600/400",
-    description: "Levantamiento topográfico de 500 hectáreas",
-  },
-  {
-    id: 6,
-    title: "Monitoreo Construcción",
-    category: "Construcción",
-    type: "video",
-    thumbnail: "/api/placeholder/600/400",
-    description: "Seguimiento semanal de avance de obra",
-  },
-];
-
-const categories = [
-  "Todos",
-  "Minería",
-  "Agricultura",
-  "Infraestructura",
-  "Comercial",
-  "Topografía",
-  "Construcción",
 ];
 
 export default function Portfolio() {
-  const [activeCategory, setActiveCategory] = useState("Todos");
-
-  const filteredItems =
-    activeCategory === "Todos"
-      ? portfolioItems
-      : portfolioItems.filter((item) => item.category === activeCategory);
+  const [active, setActive] = useState<null | (typeof albums)[number]>(null);
 
   return (
-    <section id="portafolio" className="py-20 bg-gray-50">
+    <section id="galeria" className="relative overflow-hidden py-24">
+      <div className="pointer-events-none absolute right-0 top-1/3 h-80 w-80 rounded-full bg-cyan-500/5 blur-[120px]" />
+
       <div className="container-max section-padding">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-center mb-12"
+          className="mx-auto max-w-2xl text-center"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Nuestro Portafolio
+          <span className="eyebrow mb-5">Galería de Proyectos</span>
+          <h2 className="font-display text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
+            Nuestro trabajo <span className="heading-gradient">en el aire</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-            Algunos de nuestros proyectos más destacados en diferentes
-            industrias
-          </p>
-
-          {/* Category filters */}
-          <div className="flex flex-wrap justify-center gap-2 mb-8">
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setActiveCategory(category)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                  activeCategory === category
-                    ? "bg-drone-blue text-white"
-                    : "bg-white text-gray-600 hover:bg-gray-100"
-                }`}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredItems.map((item, index) => (
-            <motion.div
-              key={item.id}
-              initial={{ opacity: 0, y: 30 }}
+        <div className="mt-14 grid grid-cols-1 gap-8 md:grid-cols-2">
+          {albums.map((album, index) => (
+            <motion.button
+              key={album.id}
+              onClick={() => setActive(album)}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
+              transition={{ duration: 0.6, delay: index * 0.12 }}
               viewport={{ once: true }}
-              className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+              className="group relative aspect-[4/3] overflow-hidden rounded-3xl border border-white/10 text-left"
             >
-              <div className="relative group">
-                <div className="aspect-video bg-gray-200 flex items-center justify-center">
-                  <span className="text-gray-400">Imagen/Video</span>
+              <Image
+                src={album.cover}
+                alt={album.title}
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-night-950 via-night-950/30 to-transparent" />
+
+              <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-6">
+                <div>
+                  <h3 className="font-display text-2xl font-bold text-white">
+                    {album.title}
+                  </h3>
+                  <p className="mt-1 flex items-center gap-2 text-sm text-cyan-300">
+                    <PhotoIcon className="h-4 w-4" />
+                    {album.count} · Ver álbum
+                  </p>
                 </div>
-
-                {item.type === "video" && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <PlayIcon className="h-12 w-12 text-white" />
-                  </div>
-                )}
-
-                <div className="absolute top-4 left-4">
-                  <span className="bg-drone-blue text-white px-3 py-1 rounded-full text-sm">
-                    {item.category}
-                  </span>
-                </div>
+                <span className="flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-md transition-all group-hover:border-cyan-400 group-hover:bg-cyan-400 group-hover:text-night-950">
+                  →
+                </span>
               </div>
-
-              <div className="p-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                  {item.title}
-                </h3>
-                <p className="text-gray-600">{item.description}</p>
-              </div>
-            </motion.div>
+            </motion.button>
           ))}
         </div>
-
-        <div className="text-center mt-12">
-          <a href="#contacto" className="btn-primary">
-            Ver Más Proyectos
-          </a>
-        </div>
       </div>
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {active && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+            onClick={() => setActive(null)}
+          >
+            <div className="absolute inset-0 bg-night-950/90 backdrop-blur-md" />
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: "spring", damping: 24, stiffness: 240 }}
+              className="relative z-10 w-full max-w-3xl overflow-hidden rounded-2xl border border-white/10"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="relative aspect-video">
+                <Image
+                  src={active.cover}
+                  alt={active.title}
+                  fill
+                  sizes="100vw"
+                  className="object-cover"
+                />
+              </div>
+              <div className="flex items-center justify-between bg-night-900 p-5">
+                <div>
+                  <h3 className="font-display text-lg font-bold text-white">
+                    {active.title}
+                  </h3>
+                  <p className="text-sm text-slate-400">{active.count}</p>
+                </div>
+                <button
+                  onClick={() => setActive(null)}
+                  className="rounded-full border border-white/15 bg-white/5 p-2 text-white hover:bg-white/10"
+                  aria-label="Cerrar"
+                >
+                  <XMarkIcon className="h-5 w-5" />
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

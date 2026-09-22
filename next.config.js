@@ -1,11 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    appDir: true,
-  },
   images: {
-    domains: ["localhost"],
     remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "globaldrone.cl",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
       {
         protocol: "https",
         hostname: "**",

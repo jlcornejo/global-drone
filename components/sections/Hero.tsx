@@ -1,86 +1,133 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ChevronDownIcon } from "@heroicons/react/24/outline";
-import Image from "next/image";
+import { ArrowDownIcon, PlayCircleIcon } from "@heroicons/react/24/outline";
+
+const stats = [
+  { value: "AOC 1819", label: "Certificación DGAC" },
+  { value: "100%", label: "Cobertura en Chile" },
+  { value: "4K/5.1K", label: "Alta resolución" },
+];
+
+const container = {
+  hidden: {},
+  show: {
+    transition: { staggerChildren: 0.12, delayChildren: 0.2 },
+  },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 30 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
+};
 
 export default function Hero() {
   return (
     <section
       id="inicio"
-      className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-blue-800 to-blue-600"
+      className="relative flex min-h-screen items-center justify-center overflow-hidden"
     >
-      {/* Background logo */}
-      <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 0.12, scale: 1 }}
-          transition={{ duration: 2, ease: "easeOut" }}
-          className="w-full h-full flex items-center justify-center"
-        >
-          <Image
-            src="/logo.png"
-            alt=""
-            width={1200}
-            height={1200}
-            className="min-w-[800px] min-h-[800px] w-[100vw] h-[100vh] max-w-none object-contain scale-150"
-            priority
-          />
-        </motion.div>
-      </div>
+      {/* Background video from official site */}
+      <video
+        className="absolute inset-0 h-full w-full object-cover"
+        autoPlay
+        muted
+        loop
+        playsInline
+        poster="https://globaldrone.cl/Fotos/D5.JPG"
+      >
+        <source
+          src="https://globaldrone.cl/Presentaci%C3%B3n/Presentaci%C3%B3n.mp4"
+          type="video/mp4"
+        />
+      </video>
 
-      {/* Background overlay */}
-      <div className="absolute inset-0 bg-black/25 z-10"></div>
+      {/* Overlays */}
+      <div className="absolute inset-0 bg-night-950/70" />
+      <div className="absolute inset-0 bg-gradient-to-t from-night-950 via-night-950/40 to-night-950/70" />
+      <div className="absolute inset-0 tech-grid opacity-30 mask-fade-b" />
+
+      {/* Floating orbs */}
+      <div className="pointer-events-none absolute -left-20 top-1/4 h-72 w-72 rounded-full bg-cyan-500/20 blur-[100px] animate-float-slow" />
+      <div className="pointer-events-none absolute -right-20 bottom-1/4 h-80 w-80 rounded-full bg-amber-500/10 blur-[120px] animate-float" />
 
       {/* Content */}
-      <div className="relative z-20 container-max section-padding text-center text-white">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 drop-shadow-2xl">
-            <span className="text-white drop-shadow-lg">Global Drone SPA</span>
-            <span className="block text-yellow-400 drop-shadow-lg">
-              Certificados DGAC AOC 1819
-            </span>
-          </h1>
-
-          <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto text-gray-100 drop-shadow-lg">
-            Empresa certificada por la Dirección General de Aeronáutica Civil.
-            Especialistas en servicios aéreos profesionales con drones para
-            minería, agricultura, construcción e inspecciones industriales.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <motion.a
-              href="#servicios"
-              className="btn-primary text-lg"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Ver Servicios
-            </motion.a>
-            <motion.a
-              href="#contacto"
-              className="btn-secondary text-lg border-white text-white hover:bg-white hover:text-blue-900"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Contactar
-            </motion.a>
-          </div>
+      <motion.div
+        variants={container}
+        initial="hidden"
+        animate="show"
+        className="relative z-10 container-max section-padding text-center"
+      >
+        <motion.div variants={item} className="mb-6 flex justify-center">
+          <span className="eyebrow">
+            <span className="h-1.5 w-1.5 animate-pulse-glow rounded-full bg-cyan-400" />
+            Soluciones Aéreas Profesionales · Chile
+          </span>
         </motion.div>
-      </div>
+
+        <motion.h1
+          variants={item}
+          className="font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-7xl"
+        >
+          Elevando Visiones,
+          <span className="mt-2 block heading-gradient text-glow">
+            Transformando Industrias
+          </span>
+        </motion.h1>
+
+        <motion.p
+          variants={item}
+          className="mx-auto mt-6 max-w-2xl text-lg text-slate-300 sm:text-xl"
+        >
+          Líderes en inspección industrial, topografía y agricultura de
+          precisión en Chile. Pilotos certificados por la DGAC y equipos de
+          última generación.
+        </motion.p>
+
+        <motion.div
+          variants={item}
+          className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
+        >
+          <a href="#servicios" className="btn-primary text-base">
+            Nuestros Servicios
+          </a>
+          <a href="#contacto" className="btn-secondary text-base">
+            <PlayCircleIcon className="h-5 w-5" />
+            Contáctanos
+          </a>
+        </motion.div>
+
+        {/* Stats row */}
+        <motion.div
+          variants={item}
+          className="mx-auto mt-16 grid max-w-2xl grid-cols-3 gap-4"
+        >
+          {stats.map((s) => (
+            <div
+              key={s.label}
+              className="glass-card px-4 py-5 text-center"
+            >
+              <div className="font-display text-xl font-bold text-cyan-300 sm:text-2xl">
+                {s.value}
+              </div>
+              <div className="mt-1 text-xs text-slate-400 sm:text-sm">
+                {s.label}
+              </div>
+            </div>
+          ))}
+        </motion.div>
+      </motion.div>
 
       {/* Scroll indicator */}
-      <motion.div
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20"
+      <motion.a
+        href="#nosotros"
+        className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 text-slate-400 hover:text-cyan-300"
         animate={{ y: [0, 10, 0] }}
         transition={{ duration: 2, repeat: Infinity }}
+        aria-label="Desplazar hacia abajo"
       >
-        <ChevronDownIcon className="h-8 w-8 text-white drop-shadow-lg" />
-      </motion.div>
+        <ArrowDownIcon className="h-6 w-6" />
+      </motion.a>
     </section>
   );
 }

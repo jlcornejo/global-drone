@@ -2,126 +2,148 @@
 
 import { motion } from "framer-motion";
 import {
-  CameraIcon,
   BuildingOffice2Icon,
-  TruckIcon,
-  MapIcon,
-  ShieldCheckIcon,
   BeakerIcon,
+  MapIcon,
+  VideoCameraIcon,
+  CubeTransparentIcon,
 } from "@heroicons/react/24/outline";
 
 const services = [
   {
-    icon: TruckIcon,
-    title: "Monitoreo de Obras Mineras",
+    icon: BuildingOffice2Icon,
+    title: "Inspección Industrial",
     description:
-      "Seguimiento detallado del progreso de obras mineras con grabaciones aéreas de alta resolución y análisis de avance.",
-    features: ["Grabación 4K", "Análisis de progreso", "Reportes detallados"],
+      "Revisión de estructuras, torres y paneles solares con termografía.",
+    image:
+      "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
   },
   {
     icon: BeakerIcon,
-    title: "Fumigación Agrícola",
+    title: "Agricultura de Precisión",
     description:
-      "Servicios de fumigación de precisión para cultivos, optimizando el uso de productos químicos y mejorando la eficiencia.",
-    features: [
-      "Fumigación precisa",
-      "Mapeo de cultivos",
-      "Optimización de recursos",
-    ],
-  },
-  {
-    icon: BuildingOffice2Icon,
-    title: "Inspección de Construcciones",
-    description:
-      "Inspecciones detalladas de estructuras, edificios y obras civiles para control de calidad y seguridad.",
-    features: [
-      "Inspección térmica",
-      "Detección de fallas",
-      "Documentación completa",
-    ],
-  },
-  {
-    icon: CameraIcon,
-    title: "Grabación Aérea Profesional",
-    description:
-      "Producción audiovisual aérea para eventos, publicidad, documentales y proyectos cinematográficos.",
-    features: ["Video 4K/8K", "Estabilización gimbal", "Edición profesional"],
+      "Análisis multiespectral de cultivos para optimizar el riego y la cosecha.",
+    image:
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
   },
   {
     icon: MapIcon,
-    title: "Mapeo y Topografía",
+    title: "Fotogrametría",
     description:
-      "Levantamientos topográficos precisos, creación de mapas digitales y modelos 3D del terreno.",
-    features: ["Mapas de alta precisión", "Modelos 3D", "Análisis geoespacial"],
+      "Levantamientos topográficos 3D y ortofotos de alta precisión.",
+    image:
+      "https://images.unsplash.com/photo-1506947411487-a56738267384?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
   },
   {
-    icon: ShieldCheckIcon,
-    title: "Monitoreo de Seguridad",
+    icon: VideoCameraIcon,
+    title: "Prod. Audiovisual",
     description:
-      "Vigilancia aérea para seguridad industrial, monitoreo de perímetros y control de accesos.",
-    features: [
-      "Vigilancia 24/7",
-      "Detección de intrusos",
-      "Alertas en tiempo real",
-    ],
+      "Grabación en 4K/5.1K para inmobiliarias, eventos y publicidad.",
+    image:
+      "https://images.unsplash.com/photo-1452421822248-d4c2b47f0c81?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    icon: CubeTransparentIcon,
+    title: "Proyectos Mineros",
+    description:
+      "Exploración, volumetría de acopios y monitoreo de faenas seguras.",
+    image: "https://globaldrone.cl/Fotos/D5.JPG",
   },
 ];
 
 export default function Services() {
   return (
-    <section id="servicios" className="py-20 bg-gray-50">
-      <div className="container-max section-padding">
+    <section id="servicios" className="relative overflow-hidden py-24">
+      <div className="pointer-events-none absolute inset-0 tech-grid opacity-[0.15]" />
+
+      <div className="container-max section-padding relative">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="mx-auto max-w-2xl text-center"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Nuestros Servicios
+          <span className="eyebrow mb-5">Nuestros Servicios</span>
+          <h2 className="font-display text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
+            Soluciones integrales para la{" "}
+            <span className="heading-gradient">industria moderna</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Ofrecemos una amplia gama de servicios especializados con drones
-            para diferentes industrias
+          <p className="mt-4 text-lg text-slate-400">
+            Adaptadas a las necesidades de cada sector, con la precisión y
+            seguridad que exige cada operación.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="mt-16 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {services.map((service, index) => (
-            <motion.div
+            <motion.article
               key={service.title}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
+              transition={{ duration: 0.6, delay: index * 0.08 }}
               viewport={{ once: true }}
-              className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300"
+              whileHover={{ y: -8 }}
+              className="group glass-card relative overflow-hidden"
             >
-              <div className="flex items-center mb-4">
-                <div className="bg-drone-blue/10 p-3 rounded-lg">
-                  <service.icon className="h-8 w-8 text-drone-blue" />
+              {/* Image */}
+              <div className="relative h-48 overflow-hidden">
+                <div
+                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+                  style={{ backgroundImage: `url(${service.image})` }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-night-900 via-night-900/50 to-transparent" />
+                <div className="absolute left-4 top-4 rounded-xl border border-white/10 bg-night-950/60 p-3 backdrop-blur-md transition-colors group-hover:border-cyan-400/50">
+                  <service.icon className="h-6 w-6 text-cyan-400" />
                 </div>
               </div>
 
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                {service.title}
-              </h3>
+              {/* Body */}
+              <div className="p-6">
+                <h3 className="font-display text-xl font-semibold text-white">
+                  {service.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-400">
+                  {service.description}
+                </p>
+                <a
+                  href="#contacto"
+                  className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-cyan-400 transition-colors hover:text-cyan-300"
+                >
+                  Solicitar información
+                  <span className="transition-transform group-hover:translate-x-1">
+                    →
+                  </span>
+                </a>
+              </div>
 
-              <p className="text-gray-600 mb-4">{service.description}</p>
-
-              <ul className="space-y-2">
-                {service.features.map((feature, idx) => (
-                  <li
-                    key={idx}
-                    className="flex items-center text-sm text-gray-500"
-                  >
-                    <div className="w-2 h-2 bg-drone-blue rounded-full mr-3"></div>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
+              {/* glow border on hover */}
+              <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-transparent transition-all duration-300 group-hover:ring-cyan-400/30" />
+            </motion.article>
           ))}
+
+          {/* CTA card */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            viewport={{ once: true }}
+            className="relative flex flex-col justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-cyan-500 to-cyan-600 p-8 text-night-950"
+          >
+            <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/20 blur-2xl" />
+            <h3 className="font-display text-2xl font-bold">
+              ¿Necesitas un presupuesto personalizado?
+            </h3>
+            <p className="mt-2 text-night-950/80">
+              Respondemos en menos de 24 horas hábiles.
+            </p>
+            <a
+              href="#contacto"
+              className="mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-night-950 px-6 py-3 font-semibold text-white transition-transform hover:-translate-y-0.5"
+            >
+              Solicitar Cotización →
+            </a>
+          </motion.div>
         </div>
       </div>
     </section>

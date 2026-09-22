@@ -1,128 +1,150 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import Image from "next/image";
 
 const navigation = [
   { name: "Inicio", href: "#inicio" },
-  { name: "Servicios", href: "#servicios" },
   { name: "Nosotros", href: "#nosotros" },
-  { name: "Certificaciones", href: "#certificaciones" },
-  { name: "Portafolio", href: "#portafolio" },
+  { name: "Servicios", href: "#servicios" },
+  { name: "Galería", href: "#galeria" },
   { name: "Contacto", href: "#contacto" },
 ];
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <header className="fixed w-full bg-white/95 backdrop-blur-sm z-50 shadow-sm">
+    <motion.header
+      initial={{ y: -80, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "border-b border-white/10 bg-night-950/80 backdrop-blur-xl"
+          : "border-b border-transparent bg-transparent"
+      }`}
+    >
       <nav className="container-max section-padding flex items-center justify-between py-4">
-        <div className="flex lg:flex-1">
-          <Link href="/" className="-m-1.5 p-1.5 flex items-center">
+        <Link href="/" className="group flex items-center gap-3">
+          <div className="relative">
+            <div className="absolute inset-0 rounded-full bg-cyan-500/40 blur-md transition group-hover:bg-cyan-400/60" />
             <Image
               src="/logo.png"
               alt="Global Drone"
-              width={40}
-              height={40}
-              className="mr-3"
+              width={42}
+              height={42}
+              className="relative"
             />
-            <span className="text-2xl font-bold text-drone-blue">
-              Global Drone
+          </div>
+          <div className="leading-none">
+            <span className="block font-display text-lg font-bold tracking-wide text-white">
+              GLOBAL<span className="text-cyan-400">DRONE</span>
             </span>
-          </Link>
-        </div>
+            <span className="block text-[10px] font-medium uppercase tracking-[0.3em] text-slate-400">
+              Soluciones Aéreas
+            </span>
+          </div>
+        </Link>
 
-        <div className="flex lg:hidden">
-          <button
-            type="button"
-            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
-            onClick={() => setMobileMenuOpen(true)}
-          >
-            <Bars3Icon className="h-6 w-6" aria-hidden="true" />
-          </button>
-        </div>
-
-        <div className="hidden lg:flex lg:gap-x-12">
+        <div className="hidden items-center gap-8 lg:flex">
           {navigation.map((item) => (
             <a
               key={item.name}
               href={item.href}
-              className="text-sm font-semibold leading-6 text-gray-900 hover:text-drone-blue transition-colors"
+              className="group relative text-sm font-medium text-slate-300 transition-colors hover:text-white"
             >
               {item.name}
+              <span className="absolute -bottom-1 left-0 h-px w-0 bg-cyan-400 transition-all duration-300 group-hover:w-full" />
             </a>
           ))}
         </div>
 
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <Link href="/admin" className="btn-primary text-sm">
-            Panel Admin
-          </Link>
+        <div className="hidden items-center gap-3 lg:flex">
+          <span className="rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-amber-300">
+            AOC Nº 1819
+          </span>
+          <a href="#contacto" className="btn-primary text-sm">
+            Cotizar
+          </a>
         </div>
+
+        <button
+          type="button"
+          className="rounded-md p-2 text-slate-200 lg:hidden"
+          onClick={() => setMobileMenuOpen(true)}
+          aria-label="Abrir menú"
+        >
+          <Bars3Icon className="h-6 w-6" />
+        </button>
       </nav>
 
-      {/* Mobile menu */}
-      {mobileMenuOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="lg:hidden fixed inset-0 z-50"
-        >
-          <div className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
-            <div className="flex items-center justify-between">
-              <Link href="/" className="-m-1.5 p-1.5 flex items-center">
-                <Image
-                  src="/logo.png"
-                  alt="Global Drone"
-                  width={32}
-                  height={32}
-                  className="mr-2"
-                />
-                <span className="text-xl font-bold text-drone-blue">
-                  Global Drone
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 lg:hidden"
+          >
+            <div
+              className="absolute inset-0 bg-night-950/80 backdrop-blur-sm"
+              onClick={() => setMobileMenuOpen(false)}
+            />
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 26, stiffness: 240 }}
+              className="absolute inset-y-0 right-0 w-full max-w-xs border-l border-white/10 bg-night-900 px-6 py-6"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-display text-lg font-bold text-white">
+                  GLOBAL<span className="text-cyan-400">DRONE</span>
                 </span>
-              </Link>
-              <button
-                type="button"
-                className="-m-2.5 rounded-md p-2.5 text-gray-700"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-              </button>
-            </div>
-            <div className="mt-6 flow-root">
-              <div className="-my-6 divide-y divide-gray-500/10">
-                <div className="space-y-2 py-6">
-                  {navigation.map((item) => (
-                    <a
-                      key={item.name}
-                      href={item.href}
-                      className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {item.name}
-                    </a>
-                  ))}
-                </div>
-                <div className="py-6">
-                  <Link
-                    href="/admin"
-                    className="btn-primary block text-center"
+                <button
+                  type="button"
+                  className="rounded-md p-2 text-slate-200"
+                  onClick={() => setMobileMenuOpen(false)}
+                  aria-label="Cerrar menú"
+                >
+                  <XMarkIcon className="h-6 w-6" />
+                </button>
+              </div>
+              <div className="mt-8 flex flex-col gap-2">
+                {navigation.map((item) => (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    className="rounded-lg px-3 py-3 text-base font-medium text-slate-200 transition-colors hover:bg-white/5 hover:text-cyan-300"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Panel Admin
-                  </Link>
-                </div>
+                    {item.name}
+                  </a>
+                ))}
+                <a
+                  href="#contacto"
+                  className="btn-primary mt-4 justify-center"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Solicitar Cotización
+                </a>
               </div>
-            </div>
-          </div>
-        </motion.div>
-      )}
-    </header>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.header>
   );
 }
