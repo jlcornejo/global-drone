@@ -79,7 +79,7 @@ export default function About() {
               </div>
               <div className="relative mt-2 overflow-hidden rounded-xl">
                 <Image
-                  src="https://globaldrone.cl/Fotos/AOC.jpg"
+                  src="/gallery/aoc.jpg"
                   alt="Certificado AOC DGAC Nº 1819"
                   width={800}
                   height={1000}

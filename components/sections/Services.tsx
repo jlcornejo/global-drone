@@ -49,7 +49,7 @@ const services = [
     title: "Proyectos Mineros",
     description:
       "Exploración, volumetría de acopios y monitoreo de faenas seguras.",
-    image: "https://globaldrone.cl/Fotos/D5.JPG",
+    image: "/gallery/tomas/D5.jpg",
   },
 ];
 

@@ -67,7 +67,7 @@ export default function Hero() {
           muted
           loop
           playsInline
-          poster="https://globaldrone.cl/Fotos/D5.JPG"
+          poster="/gallery/tomas/D5.jpg"
         >
           <source
             src="https://globaldrone.cl/Presentaci%C3%B3n/Presentaci%C3%B3n.mp4"

@@ -12,27 +12,32 @@ import {
 } from "@heroicons/react/24/outline";
 import Reveal from "@/components/ui/Reveal";
 
-const BASE = "https://globaldrone.cl/Fotos";
-
+type Photo = { full: string; thumb: string };
 type Album = {
   id: string;
   title: string;
-  photos: string[];
+  photos: Photo[];
 };
 
+function buildAlbum(
+  id: string,
+  title: string,
+  dir: string,
+  name: (i: number) => string
+): Album {
+  return {
+    id,
+    title,
+    photos: Array.from({ length: 14 }, (_, i) => ({
+      full: `/gallery/${dir}/${name(i + 1)}.jpg`,
+      thumb: `/gallery/thumbs/${dir}/${name(i + 1)}.jpg`,
+    })),
+  };
+}
+
 const albums: Album[] = [
-  {
-    id: "preparacion",
-    title: "Preparación de Vuelos",
-    // 1.jpg ... 14.jpg
-    photos: Array.from({ length: 14 }, (_, i) => `${BASE}/${i + 1}.jpg`),
-  },
-  {
-    id: "tomas",
-    title: "Tomas Aéreas",
-    // D1.JPG ... D14.JPG
-    photos: Array.from({ length: 14 }, (_, i) => `${BASE}/D${i + 1}.JPG`),
-  },
+  buildAlbum("preparacion", "Preparación de Vuelos", "preparacion", (i) => `${i}`),
+  buildAlbum("tomas", "Tomas Aéreas", "tomas", (i) => `D${i}`),
 ];
 
 export default function Portfolio() {
@@ -54,7 +59,6 @@ export default function Portfolio() {
     setOpenAlbum(album);
   };
 
-  // Keyboard navigation + scroll lock
   useEffect(() => {
     if (!openAlbum) {
       document.body.style.overflow = "";
@@ -93,17 +97,21 @@ export default function Portfolio() {
                 whileHover="hover"
                 className="group relative block aspect-[4/3] w-full overflow-hidden rounded-3xl border border-white/10 text-left"
               >
-                <motion.img
-                  src={album.photos[0]}
-                  alt={album.title}
-                  loading="lazy"
+                <motion.div
                   variants={{ hover: { scale: 1.08 } }}
                   transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                  className="absolute inset-0 h-full w-full object-cover"
-                />
+                  className="absolute inset-0"
+                >
+                  <Image
+                    src={album.photos[0].full}
+                    alt={album.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover"
+                  />
+                </motion.div>
                 <div className="absolute inset-0 bg-gradient-to-t from-night-950 via-night-950/30 to-transparent" />
 
-                {/* Sheen sweep on hover */}
                 <motion.div
                   variants={{
                     hover: { x: ["-120%", "120%"], opacity: [0, 0.4, 0] },
@@ -135,7 +143,7 @@ export default function Portfolio() {
         </div>
       </div>
 
-      {/* Lightbox with full album navigation */}
+      {/* Lightbox */}
       <AnimatePresence>
         {openAlbum && (
           <motion.div
@@ -147,7 +155,6 @@ export default function Portfolio() {
           >
             <div className="absolute inset-0 bg-night-950/95 backdrop-blur-md" />
 
-            {/* Header */}
             <div
               className="relative z-10 flex items-center justify-between"
               onClick={(e) => e.stopPropagation()}
@@ -169,7 +176,6 @@ export default function Portfolio() {
               </button>
             </div>
 
-            {/* Main image */}
             <div
               className="relative z-10 flex flex-1 items-center justify-center py-4"
               onClick={(e) => e.stopPropagation()}
@@ -183,16 +189,23 @@ export default function Portfolio() {
               </button>
 
               <AnimatePresence mode="wait">
-                <motion.img
-                  key={openAlbum.photos[index]}
-                  src={openAlbum.photos[index]}
-                  alt={`${openAlbum.title} ${index + 1}`}
+                <motion.div
+                  key={openAlbum.photos[index].full}
                   initial={{ opacity: 0, scale: 0.97 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.97 }}
                   transition={{ duration: 0.25 }}
-                  className="max-h-[70vh] max-w-full rounded-xl object-contain shadow-card"
-                />
+                  className="relative flex max-h-[70vh] w-full max-w-4xl items-center justify-center"
+                >
+                  <Image
+                    src={openAlbum.photos[index].full}
+                    alt={`${openAlbum.title} ${index + 1}`}
+                    width={1920}
+                    height={1440}
+                    priority
+                    className="max-h-[70vh] w-auto rounded-xl object-contain shadow-card"
+                  />
+                </motion.div>
               </AnimatePresence>
 
               <button
@@ -210,9 +223,9 @@ export default function Portfolio() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex max-w-full gap-2 overflow-x-auto pb-2">
-                {openAlbum.photos.map((src, i) => (
+                {openAlbum.photos.map((photo, i) => (
                   <button
-                    key={src}
+                    key={photo.thumb}
                     onClick={() => setIndex(i)}
                     className={`relative h-14 w-20 flex-shrink-0 overflow-hidden rounded-lg border-2 transition-all ${
                       i === index
@@ -221,12 +234,12 @@ export default function Portfolio() {
                     }`}
                     aria-label={`Foto ${i + 1}`}
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={src}
+                    <Image
+                      src={photo.thumb}
                       alt=""
-                      loading="lazy"
-                      className="h-full w-full object-cover"
+                      fill
+                      sizes="80px"
+                      className="object-cover"
                     />
                   </button>
                 ))}
